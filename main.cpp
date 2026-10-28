@@ -24,6 +24,8 @@ void mainMenu(int choice);
 void addGradeMenu();
 void getStudent(int index);
 void showAllStudents();
+void getStudentAverage(int student);
+void deleteStudent(int student);
 
 
 int main() {
@@ -53,6 +55,7 @@ int main() {
 
 void addStudent(string name) {
     names[studentCount] = name;
+    gradeCount[studentCount] = 0;
     studentCount++;
 }
 
@@ -136,7 +139,7 @@ int getNumber() {
 }
 
 void getStudent(int index) {
-    cout << index+1 << ". " << names[index]<< endl;
+    cout << names[index]<< endl;
     cout << " Grades: ";
 
     if (gradeCount[index] == 0) {
@@ -177,6 +180,23 @@ void showAllStudents() {
     for (int i = 0; i < studentCount; i++) {
         getStudent(i);
     }
+}
+
+void deleteStudent(int student) {
+    int index = student - 1;
+    string name = names[index];
+
+    for (int i = index; i < studentCount - 1; i++) {
+        names[i] = names[i + 1];
+        gradeCount[i] = gradeCount[i + 1];
+
+        for (int j = 0; j < 10; j++) {
+            grades[i][j] = grades[i + 1][j];
+        }
+    }
+
+    studentCount--;
+    cout << name << " has been expelled.\n";
 }
 
 void mainMenu(int choice) {
@@ -251,7 +271,22 @@ void mainMenu(int choice) {
         }
 
         case 6: {
-            // delete student
+            int secondChoice;
+
+            if (studentCount == 0) {
+                cout << "No students.\n";
+                break;
+            }
+
+            cout << "Input student number.\n";
+            secondChoice = getNumber();
+            if (validStudent(secondChoice)) {
+                deleteStudent(secondChoice);
+            }
+            else {
+                cout << "Invalid student number. Enter a number from 1 to " << studentCount << ".\n";
+            }
+
             break;
         }
 
