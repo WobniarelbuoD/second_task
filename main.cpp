@@ -13,6 +13,7 @@ int gradeCount[100];
 //functions
 void addStudent(string name);
 void addGrade(int student, int grade);
+void updateGrade();
 bool canAddGrade(int student);
 bool canAddStudent();
 bool validGrade(int grade);
@@ -20,7 +21,6 @@ bool validStudent(int student);
 int getNumber();
 void mainMenu(int choice);
 void addGradeMenu();
-void updateGrade(int index, int grade);
 void showStudent(int index);
 void showAllStudents();
 
@@ -49,6 +49,7 @@ int main() {
     return 0;
 }
 
+
 void addStudent(string name) {
     names[studentCount] = name;
     studentCount++;
@@ -57,6 +58,46 @@ void addStudent(string name) {
 void addGrade(int student, int grade) {
     grades[student][gradeCount[student]] = grade;
     gradeCount[student]++;
+}
+
+void updateGrade() {
+    int student;
+    int gradeIndex;
+    int grade;
+
+    while (true) {
+        cout << "Input student number.\n";
+        student = getNumber();
+        if (validStudent(student)) {
+            break;
+        }
+
+        cout << "Invalid student number. Enter a number from 1 to " << studentCount << ".\n";
+    }
+
+    if (gradeCount[student-1] == 0) {
+        cout << "Student has no grades.\n";
+        return;
+    }
+
+    while (true) {
+        cout << "Input which grade to update.\n";
+        gradeIndex = getNumber();
+        if (gradeIndex > 0 && gradeIndex <= gradeCount[student -1]) {
+            break;
+        }
+        cout << "Invalid student grade. Enter a number from 1 to " << gradeCount[student -1] << ".\n";
+    }
+
+    while (true) {
+        cout << "Input new grade.\n";
+        grade = getNumber();
+        if (validGrade(grade)) {
+            break;
+        }
+        cout << "Invalid student grade. Enter a number from 1 to 10.\n";
+    }
+    grades[student - 1][gradeIndex - 1] = grade;
 }
 
 bool canAddGrade(int student) {
@@ -102,7 +143,7 @@ void showStudent(int index) {
     }
     else {
         for (int j = 0; j < gradeCount[index]; j++) {
-            cout << grades[index][j] << " ";
+            cout << j +1<< ". "<< grades[index][j] << " ";
         }
     }
 
@@ -118,10 +159,6 @@ void showAllStudents() {
     for (int i = 0; i < studentCount; i++) {
         showStudent(i);
     }
-}
-
-void updateGrade(int index, int grade) {
-
 }
 
 void mainMenu(int choice) {
@@ -167,7 +204,11 @@ void mainMenu(int choice) {
         }
 
         case 4: {
-            // update grade
+            if (studentCount == 0) {
+                cout << "No students.\n";
+                break;
+            }
+            updateGrade();
             break;
         }
 
@@ -182,7 +223,6 @@ void mainMenu(int choice) {
         }
 
         case 7: {
-            // exit
             break;
         }
 
@@ -209,7 +249,12 @@ void addGradeMenu() {
                         grade = getNumber();
                         if (validGrade(grade)) {
                             addGrade(studentCount -1, grade);
-                            break;
+                            if (!canAddGrade(studentCount -1)) {
+                                cout << "The student has reached the maximum number of grades. \n";
+                                return;
+                            }
+                                break;
+
                         }
                         cout << "Grade must be between 1 and 10.\n";
                     }
