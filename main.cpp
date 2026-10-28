@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 
 using namespace std;
 
@@ -15,7 +16,10 @@ void addGrade(int student, int grade);
 bool canAddGrade(int student);
 bool canAddStudent();
 bool validGrade(int grade);
-
+void mainMenu(int choice);
+void addGradeMenu();
+void updateGrade(int index, int grade);
+void showAllStudents();
 
 
 int main() {
@@ -32,12 +36,11 @@ int main() {
 
         cout << "Choice: ";
         cin >> choice;
+        mainMenu(choice);
 
         if (choice == 7) {
             break;
         }
-
-        // later: handle 1-6 here
     }
 
     return 0;
@@ -66,4 +69,107 @@ bool validGrade(int grade) {
         return true;
     }
     return false;
+}
+
+void showAllStudents() {
+    for (int i = 0; i < studentCount; i++) {
+        cout << i+1 << ". " << names[i]<< endl;
+        cout << " grades: ";
+        for (int j = 0; j < gradeCount[i]; j++) {
+             cout << grades[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void updateGrade(int index, int grade) {
+
+}
+
+void mainMenu(int choice) {
+
+    switch (choice) {
+
+        case 1: {
+            if (canAddStudent()) {
+                string student;
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Student name: ";
+                getline(cin, student);
+                addStudent(student);
+                addGradeMenu();
+            }
+            else {
+                cout << "Maximum number of students reached.\n";
+            }
+            break;
+        }
+
+        case 2:
+            showAllStudents();
+            break;
+
+        case 3:
+            // show one student
+            break;
+
+        case 4:
+            // update grade
+            break;
+
+        case 5:
+            // calculate average
+            break;
+
+        case 6:
+            // delete student
+            break;
+
+        case 7:
+            // exit
+            break;
+
+        default:
+            cout << "Invalid option.\n";
+    }
+}
+
+void addGradeMenu() {
+    while (true) {
+        int choice;
+        cout << "Give student grade?: \n";
+        cout << "1. yes: \n";
+        cout << "2. No: \n";
+        cout << "Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                if (canAddGrade(studentCount -1)) {
+                    int grade;
+                    while (true) {
+                        cout << "input grade: ";
+                        cin >> grade;
+                        if (validGrade(grade)) {
+                            addGrade(studentCount -1, grade);
+                            break;
+                        }
+                        cout << "Grade must be between 1 and 10.\n";
+                    }
+                }
+                else {
+                    cout << "The student already has 10 grades.\n";
+                }
+
+                break;
+            }
+
+            case 2: {
+                return;
+            }
+
+            default:
+                cout << "Invalid option.\n";
+        }
+    }
 }
