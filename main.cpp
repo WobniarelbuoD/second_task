@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <iomanip>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ bool validStudent(int student);
 int getNumber();
 void mainMenu(int choice);
 void addGradeMenu();
-void showStudent(int index);
+void getStudent(int index);
 void showAllStudents();
 
 
@@ -134,7 +135,7 @@ int getNumber() {
     return number;
 }
 
-void showStudent(int index) {
+void getStudent(int index) {
     cout << index+1 << ". " << names[index]<< endl;
     cout << " Grades: ";
 
@@ -150,6 +151,23 @@ void showStudent(int index) {
     cout << endl;
 }
 
+void getStudentAverage(int student) {
+    double average = 0;
+
+    if (gradeCount[student] == 0) {
+        cout << "No grades";
+    }
+    else {
+        for (int j = 0; j < gradeCount[student]; j++) {
+            average = average + grades[student][j];
+        }
+        cout << fixed << setprecision(2);
+        cout << names[student] << " Average: " << average / gradeCount[student];
+    }
+
+    cout << endl;
+}
+
 void showAllStudents() {
     if (studentCount == 0) {
         cout << "No students.\n";
@@ -157,7 +175,7 @@ void showAllStudents() {
     }
 
     for (int i = 0; i < studentCount; i++) {
-        showStudent(i);
+        getStudent(i);
     }
 }
 
@@ -194,11 +212,10 @@ void mainMenu(int choice) {
             cout << "Input student number.\n";
             secondChoice = getNumber();
             if (validStudent(secondChoice)) {
-                showStudent(secondChoice -1);
+                getStudent(secondChoice -1);
             }
             else {
-                cout << "Invalid student number. Enter a number from 1 to "
-                     << studentCount << ".\n";
+                cout << "Invalid student number. Enter a number from 1 to " << studentCount << ".\n";
             }
             break;
         }
@@ -213,7 +230,23 @@ void mainMenu(int choice) {
         }
 
         case 5: {
-            // calculate average
+            int secondChoice;
+
+            if (studentCount == 0) {
+                cout << "No students.\n";
+                break;
+            }
+
+            cout << "Input student number.\n";
+            secondChoice = getNumber();
+
+            if (validStudent(secondChoice)) {
+                getStudentAverage(secondChoice - 1);
+            }
+            else {
+                cout << "Invalid student number. Enter a number from 1 to " << studentCount << ".\n";
+            }
+
             break;
         }
 
